@@ -8,5 +8,5 @@ before_install:
 install:
 
 script:
-  - make test testrace
-  - make coverage
+  - go build
+  - go test
