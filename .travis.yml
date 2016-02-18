@@ -6,8 +6,6 @@ before_install:
   - go get golang.org/x/tools/cmd/cover
 
 install:
-  - mkdir -p "$GOPATH/src/google.golang.org"
-  - mv "$TRAVIS_BUILD_DIR" "$GOPATH/src/github.com/willings/proxypool"
 
 script:
   - make test testrace
