@@ -1,6 +1,39 @@
 package provider
 
-import "net/http"
+import (
+	"bytes"
+	"errors"
+	"net/http"
+	"strconv"
+	"time"
+)
+
+func httpGet(url string, client *http.Client) ([]byte, error) {
+	if client == nil {
+		client = http.DefaultClient
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	client.Timeout = time.Second * 10
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		err = errors.New("Response code is " + strconv.Itoa(resp.StatusCode))
+	}
+
+	buf := &bytes.Buffer{}
+	_, err = buf.ReadFrom(resp.Body)
+
+	return buf.Bytes(), err
+}
 
 func addBotHeader(h http.Header) {
 	h.Add("User-Agent", "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")

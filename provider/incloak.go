@@ -51,40 +51,24 @@ func (p *Com_Incloak) load(param interface{}) ([]*ProxyItem, error) {
 		client = http.DefaultClient
 	}
 
-	req, err := http.NewRequest("GET", url, nil)
+	buf, err := httpGet(url, p.client)
 	if err != nil {
 		return nil, err
-	}
-	// addBotHeader(req.Header)
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New("Http Status code: " + strconv.Itoa(resp.StatusCode))
-	}
-
-	buf := &bytes.Buffer{}
-	_, err = buf.ReadFrom(resp.Body)
-	if err != nil {
-		return nil, errors.New("Failed to read stream")
 	}
 
 	startBytes := []byte("<table class=pl ")
 	endBytes := []byte("</table>")
 
-	tblStart := bytes.Index(buf.Bytes(), startBytes)
+	tblStart := bytes.Index(buf, startBytes)
 	if tblStart < 0 {
 		return nil, errors.New("Failed to parse stream")
 	}
-	tblEnd := bytes.Index(buf.Bytes()[tblStart:], endBytes) + tblStart
+	tblEnd := bytes.Index(buf[tblStart:], endBytes) + tblStart
 	if tblEnd <= tblStart {
 		return nil, errors.New("Failed to parse stream")
 	}
 
-	b := buf.Bytes()[tblStart : tblEnd+len(endBytes)]
+	b := buf[tblStart : tblEnd+len(endBytes)]
 	trArr := bytes.Split(b, []byte("<tr>"))
 	ret := make([]*ProxyItem, len(trArr))
 	cnt := 0

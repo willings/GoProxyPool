@@ -25,28 +25,7 @@ func (p *Org_Sslproxies) SetClient(client *http.Client) {
 }
 
 func (p *Org_Sslproxies) Load() ([]*ProxyItem, error) {
-	req, err := http.NewRequest("GET", p.url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	addBotHeader(req.Header)
-
-	client := p.client
-	if client == nil {
-		client = http.DefaultClient
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New("Http Status code: " + string(resp.StatusCode))
-	}
-
-	buf := &bytes.Buffer{}
-	_, err = buf.ReadFrom(resp.Body)
+	b, err := httpGet(p.url, p.client)
 	if err != nil {
 		return nil, errors.New("Failed to read stream")
 	}
@@ -54,13 +33,13 @@ func (p *Org_Sslproxies) Load() ([]*ProxyItem, error) {
 	startBytes := []byte("<tbody>")
 	endBytes := []byte("</tbody>")
 
-	tbodyStart := bytes.Index(buf.Bytes(), startBytes)
-	tbodyEnd := bytes.Index(buf.Bytes(), endBytes)
+	tbodyStart := bytes.Index(b, startBytes)
+	tbodyEnd := bytes.Index(b, endBytes)
 	if tbodyEnd <= tbodyStart {
 		return nil, errors.New("Failed to parse stream")
 	}
 
-	bytes := buf.Bytes()[tbodyStart : tbodyEnd+len(endBytes)]
+	bytes := b[tbodyStart : tbodyEnd+len(endBytes)]
 	tbl := Tbody{}
 	err = xml.Unmarshal(bytes, &tbl)
 	if err != nil {
