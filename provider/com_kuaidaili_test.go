@@ -6,7 +6,7 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	provider := CreateKuaidaili()
+	provider := &Com_kuaidaili{}
 	list, err := provider.Load()
 	fmt.Println("loaded", len(list), "error", err)
 	if err != nil && len(list) == 0 {

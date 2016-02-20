@@ -7,20 +7,19 @@ import (
 	"strconv"
 )
 
+const (
+	IN_CLOAK_URL = "http://incloak.com/proxy-list"
+	IN_CLOAK_PARAM = "type=hs&anon=234"
+)
+
 type Com_Incloak struct {
-	url    string
-	param  string
-	ports  []int
+	Ports  []int
 	client *http.Client
 }
 
 func CreateIncloakk() *Com_Incloak {
-	ports := make([]int, 0)
-	ports = append(ports, 80, 8080, 3128)
 	return &Com_Incloak{
-		url:   "http://incloak.com/proxy-list",
-		param: "type=hs&anon=234",
-		ports: ports,
+		Ports: []int{80, 8080, 3128},
 	}
 }
 
@@ -29,8 +28,8 @@ func (p *Com_Incloak) SetClient(client *http.Client) {
 }
 
 func (p *Com_Incloak) Load() ([]*ProxyItem, error) {
-	params := make([]interface{}, 0, len(p.ports))
-	for _, port := range p.ports {
+	params := make([]interface{}, 0, len(p.Ports))
+	for _, port := range p.Ports {
 		params = append(params, port)
 	}
 
@@ -44,7 +43,7 @@ func (p *Com_Incloak) load(param interface{}) ([]*ProxyItem, error) {
 		return nil, errors.New("Wrong param")
 	}
 
-	url := p.url + "/?ports=" + strconv.Itoa(port) + "&" + p.param
+	url := IN_CLOAK_URL + "/?ports=" + strconv.Itoa(port) + "&" + IN_CLOAK_PARAM
 
 	client := p.client
 	if client == nil {

@@ -9,13 +9,15 @@ type MultiLoader struct {
 func CreateProvider(providerName string) ProxyProvider {
 	switch providerName {
 	case "Kuaidaili":
-		return CreateKuaidaili()
+		return &Com_kuaidaili{}
 
 	case "Sslproxies":
-		return CreateSslproxies()
+		return &Org_sslproxies{}
 
 	case "Incloak":
-		return CreateIncloakk()
+		return &Com_Incloak{
+			Ports: []int{80, 8080, 3128},
+		}
 
 	default:
 		return nil
@@ -24,10 +26,17 @@ func CreateProvider(providerName string) ProxyProvider {
 
 func CreateAllProvider() []ProxyProvider {
 	return []ProxyProvider{
-		CreateKuaidaili(),
-		CreateSslproxies(),
-		CreateIncloakk(),
+		&Com_kuaidaili{},
+		&Org_sslproxies{},
+		&Com_Incloak{Ports: []int{80, 8080, 3128},},
 	}
+}
+
+func CreateAllLoader() ProxyProvider {
+	ret := &MultiLoader{
+		l: CreateAllProvider(),
+	}
+	return ret
 }
 
 func CreateMultiLoader(l ...ProxyProvider) ProxyProvider {

@@ -11,31 +11,27 @@ import (
 	"strings"
 )
 
-type Com_Kuaidaili struct {
-	urlbase string
-	query   []string
-	page    int
+const (
+	KUAIDAILI_URL = "http://www.kuaidaili.com/free/"
+	KUAIDAILI_PARAM = "inha|intr|outha|outtr"
+)
+
+type Com_kuaidaili struct {
+	Page int
 	client  *http.Client
 }
 
-func CreateKuaidaili() *Com_Kuaidaili {
-	return &Com_Kuaidaili{
-		urlbase: "http://www.kuaidaili.com/free/",
-		query:   []string{"inha", "intr", "outha", "outtr"},
-		page:    10,
-	}
-}
-
-func (p *Com_Kuaidaili) SetClient(client *http.Client) {
+func (p *Com_kuaidaili) SetClient(client *http.Client) {
 	p.client = client
 }
 
-func (p *Com_Kuaidaili) Load() ([]*ProxyItem, error) {
-	N := len(p.query) * p.page
+func (p *Com_kuaidaili) Load() ([]*ProxyItem, error) {
+	URL_QUERY := strings.Split(KUAIDAILI_PARAM, "|")
+	N := len(URL_QUERY) * p.Page
 	params := make([]interface{}, 0, N)
-	for _, q := range p.query {
-		for i := 1; i <= p.page; i++ {
-			url := p.urlbase + q + "/" + strconv.Itoa(i)
+	for _, q := range URL_QUERY {
+		for i := 1; i <= p.Page; i++ {
+			url := KUAIDAILI_URL + q + "/" + strconv.Itoa(i)
 			params = append(params, url)
 		}
 	}
@@ -43,7 +39,7 @@ func (p *Com_Kuaidaili) Load() ([]*ProxyItem, error) {
 	return loadParallel(p, 10, params...)
 }
 
-func (p *Com_Kuaidaili) load(param interface{}) ([]*ProxyItem, error) {
+func (p *Com_kuaidaili) load(param interface{}) ([]*ProxyItem, error) {
 	url, found := param.(string)
 	if !found {
 		return nil, errors.New("Wrong params type")
@@ -87,7 +83,7 @@ func (p *Com_Kuaidaili) load(param interface{}) ([]*ProxyItem, error) {
 	return nil, nil
 }
 
-func (p *Com_Kuaidaili) convert(tr *Tr) *ProxyItem {
+func (p *Com_kuaidaili) convert(tr *Tr) *ProxyItem {
 	if len(tr.Td) < 4 {
 		return nil
 	}

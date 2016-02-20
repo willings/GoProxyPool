@@ -6,7 +6,7 @@ import (
 )
 
 func TestSslProxiesLoad(t *testing.T) {
-	provider := CreateSslproxies()
+	provider := &Org_sslproxies{}
 	list, err := provider.Load()
 	fmt.Println("loaded", len(list), "error", err)
 	if err != nil {

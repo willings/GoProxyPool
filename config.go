@@ -61,11 +61,7 @@ func DefaultConfig() *Config {
 
 		Filter: &AcceptAll{},
 
-		Provider: provider.CreateMultiLoader(
-			provider.CreateKuaidaili(),
-			provider.CreateSslproxies(),
-			provider.CreateIncloakk(),
-		),
+		Provider: provider.CreateAllLoader(),
 
 		ProxyStrategy: func(alive map[ProxyInfo]ProxyState, request *http.Request) *ProxyInfo {
 			for info, _ := range alive {

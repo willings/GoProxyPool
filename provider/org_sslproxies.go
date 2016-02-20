@@ -9,23 +9,20 @@ import (
 	"strings"
 )
 
-type Org_Sslproxies struct {
-	url    string
+const (
+	SSLPROXIES_URL = "http://www.sslproxies.org/"
+)
+
+type Org_sslproxies struct {
 	client *http.Client
 }
 
-func CreateSslproxies() *Org_Sslproxies {
-	return &Org_Sslproxies{
-		url: "http://www.sslproxies.org/",
-	}
-}
-
-func (p *Org_Sslproxies) SetClient(client *http.Client) {
+func (p *Org_sslproxies) SetClient(client *http.Client) {
 	p.client = client
 }
 
-func (p *Org_Sslproxies) Load() ([]*ProxyItem, error) {
-	b, err := httpGet(p.url, p.client)
+func (p *Org_sslproxies) Load() ([]*ProxyItem, error) {
+	b, err := httpGet(SSLPROXIES_URL, p.client)
 	if err != nil {
 		return nil, errors.New("Failed to read stream")
 	}
@@ -59,7 +56,7 @@ func (p *Org_Sslproxies) Load() ([]*ProxyItem, error) {
 	return ret, nil
 }
 
-func (p *Org_Sslproxies) convert(tr *Tr) *ProxyItem {
+func (p *Org_sslproxies) convert(tr *Tr) *ProxyItem {
 	if len(tr.Td) < 4 {
 		return nil
 	}
