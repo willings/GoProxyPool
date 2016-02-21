@@ -17,7 +17,7 @@ func httpGet(url string, client *http.Client) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	addBotHeader(req.Header)
+	// addBotHeader(req.Header)
 
 	client.Timeout = time.Second * 10
 
