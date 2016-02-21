@@ -14,6 +14,7 @@ import (
 const (
 	KUAIDAILI_URL = "http://www.kuaidaili.com/free/"
 	KUAIDAILI_PARAM = "inha|intr|outha|outtr"
+	KUAIDAILI_PAGE = 10
 )
 
 type Com_kuaidaili struct {
@@ -26,10 +27,13 @@ func (p *Com_kuaidaili) SetClient(client *http.Client) {
 }
 
 func (p *Com_kuaidaili) Load() ([]*ProxyItem, error) {
-	URL_QUERY := strings.Split(KUAIDAILI_PARAM, "|")
-	N := len(URL_QUERY) * p.Page
+	if p.Page <= 0 {
+		p.Page = KUAIDAILI_PAGE
+	}
+	queries := strings.Split(KUAIDAILI_PARAM, "|")
+	N := len(queries) * p.Page
 	params := make([]interface{}, 0, N)
-	for _, q := range URL_QUERY {
+	for _, q := range queries {
 		for i := 1; i <= p.Page; i++ {
 			url := KUAIDAILI_URL + q + "/" + strconv.Itoa(i)
 			params = append(params, url)

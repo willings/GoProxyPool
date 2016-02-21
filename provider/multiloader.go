@@ -26,7 +26,9 @@ func CreateProvider(providerName string) ProxyProvider {
 
 func CreateAllProvider() []ProxyProvider {
 	return []ProxyProvider{
-		&Com_kuaidaili{},
+		&Com_kuaidaili{
+			Page: 10,
+		},
 		&Org_sslproxies{},
 		&Com_Incloak{Ports: []int{80, 8080, 3128},},
 	}

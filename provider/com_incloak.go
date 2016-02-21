@@ -5,11 +5,13 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 const (
 	IN_CLOAK_URL = "http://incloak.com/proxy-list"
 	IN_CLOAK_PARAM = "type=hs&anon=234"
+	IN_CLOAK_DEFAULT_PORTS = "80|8080|3128"
 )
 
 type Com_Incloak struct {
@@ -17,17 +19,19 @@ type Com_Incloak struct {
 	client *http.Client
 }
 
-func CreateIncloakk() *Com_Incloak {
-	return &Com_Incloak{
-		Ports: []int{80, 8080, 3128},
-	}
-}
-
 func (p *Com_Incloak) SetClient(client *http.Client) {
 	p.client = client
 }
 
 func (p *Com_Incloak) Load() ([]*ProxyItem, error) {
+	if p.Ports == nil || len(p.Ports) == 0{
+		ports := strings.Split(IN_CLOAK_DEFAULT_PORTS, "|")
+		p.Ports = make([]int, len(ports))
+		for i, portStr := range ports {
+			p.Ports[i], _ = strconv.Atoi(portStr)
+		}
+
+	}
 	params := make([]interface{}, 0, len(p.Ports))
 	for _, port := range p.Ports {
 		params = append(params, port)
