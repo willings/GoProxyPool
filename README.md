@@ -1,6 +1,8 @@
 # proxypool
 
-[![Build Status](https://travis-ci.org/willings/proxypool.svg?branch=master)](https://travis-ci.org/willings/proxypool) [![GoDoc](https://godoc.org/github.com/willings/proxypool?status.svg)](https://godoc.org/github.com/willings/proxypool)
+[![GoDoc](https://godoc.org/github.com/willings/proxypool?status.svg)](https://godoc.org/github.com/willings/proxypool)
+[![Build Status](https://travis-ci.org/willings/proxypool.svg?branch=master)](https://travis-ci.org/willings/proxypool) 
+[![Coverage Status](https://coveralls.io/repos/github/willings/proxypool/badge.svg?branch=master)](https://coveralls.io/github/willings/proxypool?branch=master)
 
 A HTTP Proxy management suite written in golang.
 
