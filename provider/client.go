@@ -5,7 +5,6 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 func httpGet(url string, client *http.Client) ([]byte, error) {
@@ -18,8 +17,7 @@ func httpGet(url string, client *http.Client) ([]byte, error) {
 		return nil, err
 	}
 	// addBotHeader(req.Header)
-
-	client.Timeout = time.Second * 10
+	// client.Timeout = time.Second * 10
 
 	resp, err := client.Do(req)
 	if err != nil {

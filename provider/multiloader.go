@@ -15,9 +15,7 @@ func CreateProvider(providerName string) ProxyProvider {
 		return &Org_sslproxies{}
 
 	case "Incloak":
-		return &Com_Incloak{
-			Ports: []int{80, 8080, 3128},
-		}
+		return &Com_Incloak{}
 
 	default:
 		return nil
@@ -26,11 +24,9 @@ func CreateProvider(providerName string) ProxyProvider {
 
 func CreateAllProvider() []ProxyProvider {
 	return []ProxyProvider{
-		&Com_kuaidaili{
-			Page: 10,
-		},
+		&Com_kuaidaili{},
 		&Org_sslproxies{},
-		&Com_Incloak{Ports: []int{80, 8080, 3128},},
+		&Com_Incloak{},
 	}
 }
 
